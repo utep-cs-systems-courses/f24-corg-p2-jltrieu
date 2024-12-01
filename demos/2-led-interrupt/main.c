@@ -18,6 +18,14 @@ int main(void) {
 void
 __interrupt_vec(WDT_VECTOR) WDT()	/* 250 interrupts/sec */
 {
-  P1OUT |= LED_GREEN;
+  static unsigned int count = 0;
+  if(count > 250){
+    P1OUT |= LED_GREEN;
+    count = 0;
+  }
+  else {
+  P1OUT &= ~LED_GREEN;
+  count++;
+  }
 } 
 

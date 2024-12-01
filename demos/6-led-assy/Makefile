@@ -1,5 +1,5 @@
 # makfile configuration
-COMMON_OBJECTS  = main.o 
+COMMON_OBJECTS  = main.o
 CPU             = msp430g2553
 CFLAGS          = -mmcu=${CPU} -I../h
 LDFLAGS		= -L/opt/ti/msp430_gcc/include 
@@ -11,9 +11,9 @@ AS              = msp430-elf-as
 all: led-c.elf led-s.elf 
 
 #additional rules for files
-led-c.elf: ${COMMON_OBJECTS} greenControl-c.o
+led-c.elf: ${COMMON_OBJECTS} greenControl-c.o 
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ ../lib/libTimer.a
-led-s.elf: ${COMMON_OBJECTS} greenControl-s.o
+led-s.elf: ${COMMON_OBJECTS} greenControl-s.o 
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ ../lib/libTimer.a
 
 load-c: led-c.elf

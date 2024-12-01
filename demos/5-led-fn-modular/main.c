@@ -3,6 +3,7 @@
 #include "libTimer.h"
 #include "led.h"
 
+/* Main */
 int main(void) {
   P1DIR |= LEDS;
   P1OUT &= ~LED_GREEN;
@@ -14,6 +15,8 @@ int main(void) {
   or_sr(0x18);		/* CPU off, GIE on */
 }
 
+/* Toggles green LED
+   int: if 0, turns off LED. otherwise turns on LED. */
 void greenControl(int on)
 {
   if (on) {
@@ -23,7 +26,9 @@ void greenControl(int on)
   }
 }
 
+
 // blink state machine
+/* With stock vars this will cause the LED to blink on once every 5 ticks (or 50 times a sec)*/
 static int blinkLimit = 5;   //  state var representing reciprocal of duty cycle 
 void blinkUpdate() // called every 1/250s to blink with duty cycle 1/blinkLimit
 {
@@ -36,6 +41,8 @@ void blinkUpdate() // called every 1/250s to blink with duty cycle 1/blinkLimit
     greenControl(0);
 }
 
+
+/* Causes the blink limit to raise itself, gradually dimming the light */
 void oncePerSecond() // repeatedly start bright and gradually lower duty cycle, one step/sec
 {
   blinkLimit ++;  // reduce duty cycle
@@ -43,6 +50,8 @@ void oncePerSecond() // repeatedly start bright and gradually lower duty cycle, 
     blinkLimit = 0;
 }
 
+
+/* :( */
 void secondUpdate()  // called every 1/250 sec to call oncePerSecond once per second
 {
   static int secondCount = 0; // state variable representing repeating time 0…1s
@@ -51,6 +60,8 @@ void secondUpdate()  // called every 1/250 sec to call oncePerSecond once per se
     secondCount = 0;
     oncePerSecond();
   } }
+
+
 
 void timeAdvStateMachines() // called every 1/250 sec
 {
