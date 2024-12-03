@@ -14,11 +14,3 @@ greenControl:
 	pop r0
 off:	and #~64, &P1OUT
 	pop r0
-
-	.extern blinkLimit
-oncePerSecond:
-	add #1, &blinkLimit
-	cmp #8, &blinkLimit
-	jnc end
-	mov #0, &blinkLimit
-end:	pop r0
