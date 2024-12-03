@@ -2,8 +2,8 @@
 	.p2align 1,0
 	.data
 
-red_on:		.byte 0
-green_on:	.byte 0
+red_on:		.byte 1
+green_on:	.byte 1
 led_changed:	.byte 0
 redVal:		.byte 0
 		.byte 1
@@ -29,15 +29,18 @@ led_init:
 
 led_update:
 	cmp #0, &led_changed
-	jz end
+	jnz cont		; if led_changed == 0, pop r0
+	pop r0
+cont:	
 	mov.b &red_on, r13	; r13 as index
 	mov.b redVal(r13), r12	; r12 as ledFlags
 	mov.b &green_on, r13
-	bis.b greenVal(r13), r12 ; redVal(red_on) | greenVal(green_on)
-	mov.b #255, r13		 ; r13 temp, temp = 0xff
-	xor.b #65, r13		 ; temp ^= LEDS
-	and.b r13, &P1OUT	 ; P1OUT &= temp
-	bis.b r12, &P1OUT	 ; P1OUT |= ledFlags
+	bis.b greenVal(r13), r12; redVal(red_on) | greenVal(green_on)
+	mov.b #255, r13		; r13 temp, temp = 0xff
+	xor.b #65, r13		; temp ^= LEDS
+	bis.b r12, r13		; temp |= ledFlags
+	and r13, &P1OUT		; P1OUT &= temp
+	bis r12, &P1OUT	 	; P1OUT |= ledFlags
 	mov.b #0, &led_changed
-end:	pop r0
+	pop r0
 	
