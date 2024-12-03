@@ -1,5 +1,4 @@
 	.arch msp430g2553
-	.p2align 1,0
 	.data
 
 red_on:		.byte 1
@@ -10,10 +9,10 @@ redVal:		.byte 0
 greenVal:	.byte 0
 		.byte 64
 
+	.p2align 1,0
 	.text
 
-	.global red_on
-	.global green_on
+	.global red_on, green_on
 	.global led_changed
 	.global led_init
 	.global led_update
@@ -24,14 +23,12 @@ greenVal:	.byte 0
 led_init:
 	bis #65, &P1DIR
 	mov.b #1, &led_changed
-	call led_update
+	mov #led_update, r0
 	pop r0
 
 led_update:
 	cmp #0, &led_changed
-	jnz cont		; if led_changed == 0, pop r0
-	pop r0
-cont:	
+	jz end		; if led_changed == 0, pop r0
 	mov.b &red_on, r13	; r13 as index
 	mov.b redVal(r13), r12	; r12 as ledFlags
 	mov.b &green_on, r13
@@ -42,5 +39,4 @@ cont:
 	and r13, &P1OUT		; P1OUT &= temp
 	bis r12, &P1OUT	 	; P1OUT |= ledFlags
 	mov.b #0, &led_changed
-	pop r0
-	
+end:	pop r0
